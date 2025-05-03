@@ -1,4 +1,3 @@
-// src/components/QRScanner.jsx
 import React from "react";
 import { useZxing } from "react-zxing";
 

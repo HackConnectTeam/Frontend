@@ -3,11 +3,33 @@ import { useEffect, useState } from 'react';
 import ChallengeCard from '../components/challenges/ChallengeCard';
 import ChallengeCardsList from '../components/challenges/ChallengeCardsList';
 import Header from '../components/static/Header';
+import RealService from '../services/RealService';
+
 
 
 const UserPage = () => {
   const { userId } = useParams();
   const [qrData, setQrData] = useState('');
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      setQrData(decodeURIComponent(userId));
+    }
+
+    // Obtener actividades del backend
+    const fetchActivities = async () => {
+      try {
+        const data = await RealService.getActivities();
+        setActivities(data); // Asume que el backend devuelve un array
+      } catch (error) {
+        console.error("Error cargando actividades:", error);
+      }
+    };
+
+    fetchActivities();
+  }, [userId]);
+
 
   useEffect(() => {
     if (userId) {
@@ -28,7 +50,7 @@ const UserPage = () => {
           </p>
         </div>
 
-        <ChallengeCardsList />
+        <ChallengeCardsList challenges={activities} userId={userId} />
 
       </main>
 

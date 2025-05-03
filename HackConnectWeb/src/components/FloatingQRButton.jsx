@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import QRScanner from './QRScanner';
-import { toast } from 'react-hot-toast';
+//import { toast } from 'react-hot-toast';
 
 const FloatingQRButton = ({ onScan }) => {
   const [showScanner, setShowScanner] = useState(false);
 
   const handleScan = (data) => {
-    toast.success('Código QR escaneado correctamente');
+    //toast.success('Código QR escaneado correctamente');
     setShowScanner(false);
     onScan(data);
   };
