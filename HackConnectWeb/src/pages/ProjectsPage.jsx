@@ -1,36 +1,65 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-
+import { useState, useEffect } from 'react';
+import ProjectList from '../components/projects/ProjectList';
 import Header from '../components/static/Header';
-import FloatingQRButton from '../components/FloatingQRButton';
+import RealService from '../services/RealService';
+import AddProjectModal from '../components/projects/AddProjectModal';
 
 const ProjectsPage = () => {
-  const { id, userId } = useParams();
+    const [showModal, setShowModal] = useState(false);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const fetchProjects = async () => {
+          try {
+            const data = await RealService.getProjects();
+            setProjects(data);
+          } catch (err) {
+            console.error('Error cargando proyectos:', err);
+          } finally {
+            setLoading(false);
+          }
+        };
 
-  const [challenge, setChallenge] = useState(null);
+        fetchProjects();
+      }, []);
+      const handleSuccess = async () => {
+        const data = await RealService.getProjects();
+        setProjects(data);
+      };
 
-  useEffect(() => {
-  }, []);
 
-  const handleAdd = async () => {
-  };
-
-  if (!challenge) {
-    return (
-      <div className="min-h-screen bg-background text-text-main flex items-center justify-center">
-        <h1 className="text-xl text-secondary">Loading projects...</h1>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-background text-text-main">
-      <Header userId={userId} />
+    <div className="min-h-screen bg-background text-text-main flex flex-col">
+        <Header />
 
-      <div className="max-w-4xl mx-auto px-4 py-12">
-      </div>
+        <main className="flex-grow p-6 relative">
+            <h1 className="text-3xl font-bold text-primary text-center mb-8">
+            Proyectos del Hackathon
+            </h1>
 
-      <FloatingQRButton onScan={handleAdd} />
+            <ProjectList projects={projects} loading={loading} />
+
+            {/* Botón flotante */}
+            <button
+            onClick={() => setShowModal(true)}
+            className="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-lg text-3xl flex items-center justify-center hover:bg-primary/90 transition z-40"
+            aria-label="Añadir proyecto"
+            >
+            +
+            </button>
+
+            {showModal && (
+            <AddProjectModal
+                onClose={() => setShowModal(false)}
+                onSuccess={handleSuccess}
+            />
+            )}
+        </main>
+
+        <footer className="bg-secondary text-white p-4 text-center text-sm">
+            <p>HackUPC 2025</p>
+        </footer>
     </div>
   );
 };
