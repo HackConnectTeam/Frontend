@@ -1,7 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import ChallengeCard from '../components/ChallengeCard';
-import ChallengeCardsList from '../components/ChallengeCardsList';
+import ChallengeCard from '../components/challenges/ChallengeCard';
+import ChallengeCardsList from '../components/challenges/ChallengeCardsList';
+import Header from '../components/static/Header';
 
 
 const UserPage = () => {
@@ -16,9 +17,8 @@ const UserPage = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="bg-primary text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">Bienvenido a HackConnect</h1>
-      </header>
+      <Header userId={userId} />
+
 
       <main className="flex-grow flex flex-col items-center justify-center p-4 gap-6">
         <div className="bg-surface rounded-2xl shadow p-6 w-full max-w-md text-center text-text-main">
