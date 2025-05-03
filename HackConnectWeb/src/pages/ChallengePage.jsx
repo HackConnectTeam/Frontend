@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import Header from '../components/static/Header';
+import ParticipationList from '../components/challenges/ParticipationList';
 
 const ChallengePage = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const ChallengePage = () => {
 
         {/* Aquí vendrá la futura lista de tarjetas */}
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {/* Por ejemplo: <SubtaskCard /> */}
+          <ParticipationList />
         </div>
       </div>
     </div>
