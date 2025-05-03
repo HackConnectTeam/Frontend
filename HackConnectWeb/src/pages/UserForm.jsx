@@ -192,6 +192,21 @@ const UserForm = () => {
           ) : 'Edit user'}
         </button>
       </form>
+
+      <div className="mt-8 pt-4 border-t border-gray-200">
+        <h3 className="text-sm font-medium text-gray-500">Help us improve</h3>
+        <a
+          href="https://tally.so/r/wayNr9"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-2 inline-flex items-center text-sm text-blue-600 hover:text-blue-500"
+        >
+          Share your feedback
+          <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </a>
+      </div>
     </div>
   );
 };
