@@ -13,7 +13,6 @@ const ChallengePage = () => {
   const [challenge, setChallenge] = useState(null);
   const [scannedUserId, setScannedUserId] = useState(null);
 
-  // ✅ Obtener challenge real del backend
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
@@ -28,30 +27,26 @@ const ChallengePage = () => {
     if (id) fetchChallenge();
   }, [id]);
 
-  // ✅ Al escanear usuario
   const handleScan = async (scannedData) => {
     setScannedUserId(scannedData);
 
     try {
       const result = await RealService.checkChallenge(id, scannedData, userId);
-      console.log("✅ Participación registrada:", result);
 
       if (result.status === "failed") {
-        toast.error("Error al registrar al usuario");
+        toast.error("Error when registering the user");
       } else {
-        toast.success("Participante registrado con éxito");
+        toast.success("Participant registered successfully");
       }
     } catch (error) {
-      console.error("❌ Error al registrar participación:", error);
-      toast.error("Error al registrar al usuario");
+      toast.error("Error when registering the user");
     }
   };
 
-  // 🔄 Mientras carga el challenge
   if (!challenge) {
     return (
       <div className="min-h-screen bg-background text-text-main flex items-center justify-center">
-        <h1 className="text-xl text-secondary">Cargando reto...</h1>
+        <h1 className="text-xl text-secondary">Loading challenge...</h1>
       </div>
     );
   }

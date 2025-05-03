@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://backend-unz5.onrender.com';
 
 const RealService = {
   // Obtener todos los tags
