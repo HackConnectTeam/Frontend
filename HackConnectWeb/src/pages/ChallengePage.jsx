@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import Header from '../components/static/Header';
 import ParticipationList from '../components/challenges/ParticipationList';
+import FloatingQRButton from '../components/FloatingQRButton';
 
 const ChallengePage = () => {
   const { id } = useParams();
@@ -47,6 +48,8 @@ const ChallengePage = () => {
           <ParticipationList />
         </div>
       </div>
+
+      <FloatingQRButton />
     </div>
   );
 };
