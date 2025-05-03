@@ -2,18 +2,29 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import QRScanner from '../components/QRScanner';
 import Header from '../components/static/Header';
+import RealService from '../services/RealService';
 
 const ScanPage = () => {
   const navigate = useNavigate();
 
-  const handleScan = (userId) => {
-    navigate(`/user/${encodeURIComponent(userId)}`);
+  const handleScan = async (userId) => {
+    try {
+      // Crear usuario con los datos mínimos
+      await RealService.createUser({
+        id: userId
+      });
+
+      // Navegar a la página del usuario
+      navigate(`/user/${encodeURIComponent(userId)}`);
+    } catch (error) {
+      console.error("Error al crear usuario:", error);
+      Toast.error("Error al crear usuario. Por favor, inténtalo de nuevo.");
+    }
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-            <Header />
-
+      <Header />
 
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="bg-surface rounded-2xl shadow p-6 w-full max-w-md text-text-main">
