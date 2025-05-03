@@ -8,13 +8,16 @@ import ProjectsPage from './pages/ProjectsPage';
 import MainLayout from './pages/MainLayout';
 import { getUserId } from './utils/auth';
 import { Navigate } from 'react-router-dom';
+import OnboardingPage from './pages/OnboardingPage';
 
 function App() {
   const storedUserId = getUserId();
+  const onboardingCompleted = localStorage.getItem('onboardingCompleted') === 'true';
 
   return (
     <Router>
       <Routes>
+        {!onboardingCompleted && <Route path="/" element={<OnboardingPage />} />}
 
         {/* Redirects automatically if there is a saved user */}
         <Route path="/" element={storedUserId ?
