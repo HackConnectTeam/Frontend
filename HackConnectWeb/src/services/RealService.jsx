@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://backend-unz5.onrender.com';
+const API_BASE_URL = 'http://localhost:8000';
 
 const RealService = {
   // Obtener todos los tags
@@ -100,8 +100,40 @@ const RealService = {
       throw error;
     }
   },
+    // Obtener todos los tags de un usuario específico
+    // En tu RealService.js
+  getTagsByUser: async (userId) => {
+    try {
+      // 1. Obtener las relaciones usuario-tag
+      const response = await axios.get(`${API_BASE_URL}/user_tag/`, {
+        params: {
+          user_id: userId
+        }
+      });
 
+      const userTagRelations = response.data || [];
 
+      // 2. Obtener los detalles de cada tag individualmente
+      const tagDetails = await Promise.all(
+        userTagRelations.map(async (relation) => {
+          try {
+            const tagResponse = await axios.get(`${API_BASE_URL}/tag/${relation.tag_id}`);
+            return tagResponse.data.name; // Devolver solo el nombre del tag
+          } catch (error) {
+            console.error(`Error fetching tag ${relation.tag_id}:`, error);
+            return null; // O podrías devolver un valor por defecto
+          }
+        })
+      );
+
+      // 3. Filtrar posibles valores nulos y devolver solo los nombres válidos
+      return tagDetails.filter(name => name !== null);
+
+    } catch (error) {
+      console.error(`Error getting tags for user ${userId}:`, error);
+      throw error;
+    }
+  },
 };
 
 export default RealService;

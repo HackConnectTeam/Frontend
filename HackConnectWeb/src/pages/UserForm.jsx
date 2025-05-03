@@ -20,21 +20,26 @@ const UserForm = () => {
       try {
         setLoading(true);
 
-        // Cargar tags disponibles
-        const tags = await RealService.getTags();
+        // Cargar tags disponibles y tags del usuario en paralelo
+        const [tags, user] = await Promise.all([
+          RealService.getTags(),
+          userId ? RealService.getUser(userId) : Promise.resolve(null)
+        ]);
+
         setAvailableTags(tags);
 
-        // Si hay ID, cargar datos del usuario
-        if (userId) {
-          const user = await RealService.getUser(userId);
+        if (user) {
           setName(user.name || '');
           setNationality(user.nationality || '');
-          setSelectedTags(user.tags || []);
-          // Para tags como strings
-          const userTags = Array.isArray(user.tags) ? user.tags : [user.tags];
+
+          // Obtener tags del usuario y seleccionar los que existan en availableTags
+          const userTags = await RealService.getTagsByUser(userId);
           const validTags = userTags.filter(tag =>
-            typeof tag === 'string' && tagsResponse.includes(tag)
+            tags.includes(tag)
           );
+          console.log("tags", tags);
+          console.log("userTags", userTags);
+          console.log("validTags", validTags);
           setSelectedTags(validTags);
         }
       } catch (err) {
@@ -70,10 +75,11 @@ const UserForm = () => {
 
     try {
       setLoading(true);
+      const uniqueTags = [...new Set(selectedTags)];
       await axios.patch(`http://localhost:8000/users/${userId}`, {
         name: name,
         nationality: nationality,
-        tags: selectedTags
+        tags: uniqueTags
       });
       setSuccess(true);
     } catch (err) {
@@ -139,27 +145,26 @@ const UserForm = () => {
           ) : (
             <div className="flex flex-wrap gap-3">
               {availableTags.map(tag => {
-              // Verificar si el tag está seleccionado
-              const isSelected = selectedTags.includes(tag);
-              return (
-                <div key={tag} className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id={`tag-${tag}`}
-                    checked={isSelected}
-                    onChange={() => handleTagToggle(tag)}
-                    disabled={loading}
-                    className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                  />
-                  <label
-                    htmlFor={`tag-${tag}`}
-                    className="ml-2 text-sm text-main"
-                  >
-                    {tag}
-                  </label>
-                </div>
-              );
-            })}
+                const isSelected = selectedTags.includes(tag);
+                return (
+                  <div key={tag} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id={`tag-${tag}`}
+                      checked={isSelected}
+                      onChange={() => handleTagToggle(tag)}
+                      disabled={loading}
+                      className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                    />
+                    <label
+                      htmlFor={`tag-${tag}`}
+                      className="ml-2 text-sm text-main"
+                    >
+                      {tag}
+                    </label>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
