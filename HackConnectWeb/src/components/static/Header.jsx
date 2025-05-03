@@ -12,6 +12,9 @@ const Header = ({ userId }) => {
           <button
             className="p-2 bg-transparent border-none focus:outline-none"
             aria-label="Menú"
+            onClick={() => {
+              window.location.href = `/user/${userId}/edit`;
+            }}
           >
             <div className="w-6 h-0.5 bg-white mb-1" />
             <div className="w-6 h-0.5 bg-white mb-1" />
