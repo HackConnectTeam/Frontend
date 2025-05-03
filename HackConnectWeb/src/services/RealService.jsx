@@ -41,9 +41,9 @@ const RealService = {
   },
 
   // Actualizar un usuario existente
-  updateUser: async (id, userData) => {
+  updateUser: async (userId, userData) => {
     try {
-      const response = await axios.put(`${API_BASE_URL}/users/${id}`, userData);
+      const response = await axios.patch(`${API_BASE_URL}/users/${userId}`, userData);
       return response.data;
     } catch (error) {
       console.error('Error updating user:', error);

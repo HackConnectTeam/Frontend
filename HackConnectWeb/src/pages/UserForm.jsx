@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import RealService from '../services/RealService';
 
@@ -76,11 +75,13 @@ const UserForm = () => {
     try {
       setLoading(true);
       const uniqueTags = [...new Set(selectedTags)];
-      await axios.patch(`http://localhost:8000/users/${userId}`, {
+
+      await RealService.updateUser(userId, {
         name: name,
         nationality: nationality,
         tags: uniqueTags
       });
+
       setSuccess(true);
     } catch (err) {
       setError('Error al actualizar el usuario');
