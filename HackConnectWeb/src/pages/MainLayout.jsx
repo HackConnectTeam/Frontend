@@ -1,11 +1,23 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 import BottomNavigation from '../components/BottomNavigation';
 
 const MainLayout = ({ userId }) => {
+  const navigate = useNavigate();
+  const params = useParams();
+  const finalUserId = userId || params.userId;
+
+  useEffect(() => {
+    // Si estamos en la ruta base (/user/:userId), redirigir a challenges
+    if (window.location.pathname === `/user/${finalUserId}`) {
+      navigate(`/user/${finalUserId}/scoreboard`, { replace: true });
+    }
+  }, [finalUserId, navigate]);
+
   return (
     <div className="flex flex-col min-h-screen">
-      <main className="flex-grow pb-16"> {/* pb-16 para dejar espacio para la barra inferior */}
-        <Outlet /> {/* Esto renderizará las páginas hijas */}
+      <main className="flex-grow pb-16">
+        <Outlet />
       </main>
       <BottomNavigation userId={userId} />
     </div>

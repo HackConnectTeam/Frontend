@@ -137,15 +137,6 @@ const UserForm = () => {
           <label htmlFor="nationality" className="block text-sm font-medium text-subtle mb-1">
             Nationality:
           </label>
-          <input
-            id="nationality"
-            type="text"
-            value={nationality}
-            onChange={(e) => setNationality(e.target.value)}
-            placeholder="Input your nationality"
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-          />
           <CountrySelect
             value={nationality}
             onChange={setNationality}
