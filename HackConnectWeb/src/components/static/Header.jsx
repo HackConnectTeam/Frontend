@@ -3,7 +3,7 @@ const Header = ({ userId }) => {
       <header className="bg-primary text-white p-4 shadow-md flex items-center justify-between relative">
 
         <div className="bg-white p-2 rounded">
-            <img src="/public/LogoTitulo.png" alt="Logo" className="mx-auto h-10" />
+            <img src="/LogoTitulo.png" alt="Logo" className="mx-auto h-10" />
 
         </div>
 
