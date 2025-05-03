@@ -6,12 +6,22 @@ import ChallengePage from './pages/ChallengePage';
 import ScoreboardPage from './pages/ScoreboardPage';
 import ProjectsPage from './pages/ProjectsPage';
 import MainLayout from './pages/MainLayout';
+import { getUserId } from './utils/auth';
+import { Navigate } from 'react-router-dom';
 
 function App() {
+  const storedUserId = getUserId();
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<ScanPage />} />
+
+        {/* Redirects automatically if there is a saved user */}
+        <Route path="/" element={storedUserId ?
+          <Navigate to={`/user/${storedUserId}/challenges`} replace /> :
+          <ScanPage />}
+        />
+
         <Route path="/user/:userId/edit" element={<UserForm />} />
         <Route path="/user/:userId" element={<MainLayout />}>
           <Route path="challenges" element={<UserPage />} />

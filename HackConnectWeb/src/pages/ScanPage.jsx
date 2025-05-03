@@ -3,9 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import QRScanner from '../components/QRScanner';
 import Header from '../components/static/Header';
 import RealService from '../services/RealService';
+import { saveUserId } from '../utils/auth';
 
 const ScanPage = () => {
   const navigate = useNavigate();
+
+  const handleScanSuccess = (userId) => {
+    saveUserId(userId);
+    navigate(`/user/${encodeURIComponent(userId)}`);
+  };
 
   const handleScan = async (userId) => {
     try {
@@ -13,21 +19,20 @@ const ScanPage = () => {
         .then((exists) => {
           if (exists) {
             // If the user exists, navigate to their page
-            navigate(`/user/${encodeURIComponent(userId)}`);
+            handleScanSuccess(userId);
           } else {
             // If the user does not exist, create a new user
             createUser(userId);
+            handleScanSuccess(userId);
           }
         });
       } catch (error) {
         try {
           createUser(userId);
+          handleScanSuccess(userId);
         } catch (error) {
           Toast.error("Error when creating the user. Please, try it again.");
         }
-
-        // Navigate to the user page
-        navigate(`/user/${encodeURIComponent(userId)}`);
       }
   };
 
