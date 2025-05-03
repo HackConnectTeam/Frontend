@@ -5,6 +5,7 @@ import ImageUploader from '../components/UploadImage';
 import { toast } from 'react-hot-toast';
 import Header from '../components/static/Header';
 import CountrySelect from '../components/CountrySelect';
+import SelectTags from '../components/SelectTags';
 
 
 const UserForm = () => {
@@ -13,8 +14,9 @@ const UserForm = () => {
   const [name, setName] = useState('');
   const [nationality, setNationality] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
-  const [availableTags, setAvailableTags] = useState([]);
+
   const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +28,6 @@ const UserForm = () => {
           userId ? RealService.getUser(userId) : Promise.resolve(null)
         ]);
 
-        setAvailableTags(tags);
 
         if (user) {
           setName(user.name || '');
@@ -75,6 +76,7 @@ const UserForm = () => {
 
   const handleImageUpload = async (formData) => {
     try {
+      console.log(formData)
       const file = formData.get('image');
       if (!file) {
         toast.error('None image selected');
@@ -99,6 +101,19 @@ const UserForm = () => {
       toast.error('Error al subir imagen');
     }
   };
+
+  useEffect(() => {
+    const loadTags = async () => {
+      try {
+        const data = await RealService.getTags();
+
+      } catch {
+        toast.error('No se pudieron cargar los tags');
+      }
+    };
+
+    loadTags();
+  }, []);
 
   return (
     <div className="max-w-md mx-auto p-6 bg-surface rounded-lg shadow-md">
@@ -146,32 +161,8 @@ const UserForm = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium text-subtle mb-2">Tags:</label>
+        <SelectTags selected={tags} onChange={setTags} disabled={loading} />
 
-          {loading && availableTags.length === 0 ? (
-            <p className="text-subtle">Loading tags...</p>
-          ) : (
-            <div className="flex flex-wrap gap-3">
-              {availableTags.map(tag => {
-                const isSelected = selectedTags.includes(tag);
-                return (
-                  <div key={tag} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={`tag-${tag}`}
-                      checked={isSelected}
-                      onChange={() => handleTagToggle(tag)}
-                      disabled={loading}
-                      className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                    />
-                    <label htmlFor={`tag-${tag}`} className="ml-2 text-sm text-main">
-                      {tag}
-                    </label>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </div>
 
         <button

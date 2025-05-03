@@ -244,6 +244,28 @@ const RealService = {
     }
   },
 
+  generateProjectName: async (userId, projectDescription) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/generate_project_names/?user_id=${encodeURIComponent(userId)}`,
+        {
+          project_description: projectDescription,
+        },
+        {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error('Error generando nombre del proyecto:', error);
+      throw error;
+    }
+  },
+
 
 
 };

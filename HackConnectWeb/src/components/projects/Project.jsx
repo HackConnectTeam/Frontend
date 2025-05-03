@@ -4,27 +4,22 @@ import RealService from '../../services/RealService';
 const Project = ({ title, description_raw, user_id, tags = [] }) => {
 
   const [userName, setUserName] = useState('Anónimo');
-  const [tagNames, setTagNames] = useState([]);
+
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
         if (!tags || !Array.isArray(tags)) return;
 
-        const [userData, allTags] = await Promise.all([
+        const [userData] = await Promise.all([
           RealService.getUser(user_id),
-          RealService.getTags()
+
         ]);
 
         if (userData?.name?.trim()) {
           setUserName(userData.name);
         }
 
-        const validTagNames = tags
-          .map(tagId => allTags.find(tag => tag.id === tagId || tag === tagId))
-          .filter(Boolean);
-
-        setTagNames(validTagNames.map(tag => tag.name || tag));
       } catch (err) {
         console.error('Error cargando detalles del proyecto:', err);
       }
@@ -42,16 +37,6 @@ const Project = ({ title, description_raw, user_id, tags = [] }) => {
         <span className="font-semibold">Autor:</span> {userName}
       </div>
 
-      <div className="flex flex-wrap gap-2 mt-2">
-        {tagNames.map((tag, index) => (
-          <span
-            key={index}
-            className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full"
-          >
-            #{tag}
-          </span>
-        ))}
-      </div>
     </div>
   );
 };

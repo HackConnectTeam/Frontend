@@ -3,20 +3,20 @@ import RealService from '../../services/RealService';
 import { toast } from 'react-hot-toast';
 import SelectTags from '../SelectTags';
 
-
-
 const AddProjectModal = ({ onClose, onSuccess }) => {
   const [title, setTitle] = useState('');
+  const [generated_name, setGenerateName] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState([]);
-  // const [availableTags, setAvailableTags] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [suggestedTitles, setSuggestedTitles] = useState([]);
+  const [hasGenerated, setHasGenerated] = useState(false);
 
   useEffect(() => {
     const loadTags = async () => {
       try {
         const data = await RealService.getTags();
-        setAvailableTags(data);
+        // Si necesitas guardar tags disponibles en algún lado, agrégalo
       } catch {
         toast.error('No se pudieron cargar los tags');
       }
@@ -25,16 +25,41 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
     loadTags();
   }, []);
 
+  const handleGenerateTitle = async () => {
+    try {
+      const result = await RealService.generateProjectName(200, description);
+      const suggestions = [result.name1, result.name2, result.name3];
+      setSuggestedTitles(suggestions);
+      setGenerateName(result.name1);
+      setHasGenerated(true);
+    } catch (err) {
+      console.error('Error generando título:', err);
+      toast.error('No se pudo generar el título');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const finalTitle = title.trim() || generated_name;
+
+    if (!hasGenerated || !generated_name) {
+      toast.error('Primero debes generar sugerencias');
+      setLoading(false);
+      return;
+    }
+
     try {
       const projectData = {
-        title,
+        title: finalTitle,
         description_raw: description,
-        user_id: 200, // usa el real si lo tienes
+        generated_name: generated_name,
+        user_id: 200, // reemplaza con el ID real si lo tienes
+        //team_id: 0,   // ajusta según tu lógica
         tags,
       };
+
       await RealService.createProject(projectData);
       toast.success('Proyecto creado');
       onSuccess(); // notificar al padre
@@ -51,14 +76,6 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
         <h2 className="text-xl font-bold text-primary mb-4">Nuevo Proyecto</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="w-full p-2 border border-gray-300 rounded"
-          />
           <textarea
             placeholder="Descripción"
             value={description}
@@ -66,6 +83,54 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
             required
             className="w-full p-2 border border-gray-300 rounded"
           />
+
+          <input
+            type="text"
+            placeholder="Título (opcional)"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Nombre generado"
+              value={generated_name}
+              onChange={(e) => setGenerateName(e.target.value)}
+              required
+              className="flex-1 p-2 border border-gray-300 rounded"
+            />
+            <button
+              type="button"
+              onClick={handleGenerateTitle}
+              disabled={!description}
+              className={`px-3 py-2 text-sm rounded bg-primary text-white transition ${
+                !description ? 'opacity-50 cursor-not-allowed' : 'hover:bg-primary/90'
+              }`}
+            >
+              Generar
+            </button>
+          </div>
+
+          {suggestedTitles.length > 0 && (
+            <div className="mt-2 space-y-1">
+              <p className="text-sm text-subtle">Sugerencias:</p>
+              {suggestedTitles.map((name, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setTitle(name);
+                    setGenerateName(name);
+                  }}
+                  className="block text-left w-full px-2 py-1 bg-gray-100 rounded hover:bg-gray-200 text-sm"
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          )}
 
           <SelectTags selected={tags} onChange={setTags} disabled={loading} />
 
@@ -86,7 +151,6 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );
