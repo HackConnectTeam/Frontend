@@ -178,6 +178,25 @@ const RealService = {
         throw error;
       }
     },
+
+    postToMii: async (userId, imagePath) => {
+      try {
+        const response = await axios.post(`${API_BASE_URL}/ToMii/`, {
+          user_id: userId,
+          image_path: imagePath,
+        }, {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
+
+        return response.data;
+      } catch (error) {
+        console.error('Error al hacer POST a /ToMii/:', error);
+        throw error;
+      }
+    },
 };
 
 export default RealService;

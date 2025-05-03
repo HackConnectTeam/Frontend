@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import RealService from '../services/RealService';
+import ImageUploader from '../components/UploadImage';
 
 const UserForm = () => {
   const { userId } = useParams();
@@ -91,6 +92,35 @@ const UserForm = () => {
     }
   };
 
+  const handleImageUpload = async (formData) => {
+    try {
+      const file = formData.get('image');
+      if (!file) {
+        toast.error('No se seleccionó ninguna imagen.');
+        return;
+      }
+
+      // Convertir a Base64
+      const toBase64 = (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file); // esto incluye "data:image/jpeg;base64,..."
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+        });
+
+      const base64Image = await toBase64(file);
+
+      await RealService.postToMii(userId, base64Image);
+      toast.success('Imagen enviada correctamente en base64');
+
+    } catch (error) {
+      console.error('Error al subir imagen:', error);
+      toast.error('Error al subir imagen');
+    }
+  };
+
+
   return (
     <div className="max-w-md mx-auto p-6 bg-surface rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-main mb-6">Editar información de usuario</h2>
@@ -107,8 +137,10 @@ const UserForm = () => {
         </div>
       )}
 
+
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
+          <ImageUploader onUpload={handleImageUpload}/>
           <label htmlFor="name" className="block text-sm font-medium text-subtle mb-1">
             Nombre de usuario:
           </label>
