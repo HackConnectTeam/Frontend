@@ -56,8 +56,6 @@ const UserPage = () => {
       <Header userId={userId} />
       <main className="flex-grow flex flex-col items-center justify-center p-4 gap-6">
       <div className="w-full max-w-4xl flex items-center justify-between mb-6">
-
-
         <div className="flex-1 text-center">
           <h2 className="text-2xl font-bold text-primary">Challenge</h2>
           <p className="text-text-subtle">{completedCount} / {activities.length} retos completados</p>
@@ -65,18 +63,9 @@ const UserPage = () => {
         <div className="text-right text-primary font-semibold text-lg">
           {userPoints} pts
         </div>
-
       </div>
-
-
-
-
-        <ChallengeCardsList challenges={activities} userId={userId} />
+      <ChallengeCardsList challenges={activities} userId={userId} />
       </main>
-
-      <footer className="bg-secondary text-white p-4 text-center text-sm">
-        <p>HackUPC 2025</p>
-      </footer>
     </div>
   );
 

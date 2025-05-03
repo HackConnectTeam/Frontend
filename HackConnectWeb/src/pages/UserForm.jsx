@@ -15,8 +15,6 @@ const UserForm = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [availableTags, setAvailableTags] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,8 +37,7 @@ const UserForm = () => {
           setSelectedTags(validTags);
         }
       } catch (err) {
-        setError(userId ? 'Error loading user data' : 'Error loading tags');
-        console.error(err);
+        toast.error(userId ? 'Error loading user data' : 'Error loading tags');
       } finally {
         setLoading(false);
       }
@@ -57,13 +54,6 @@ const UserForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(false);
-
-    if (!name) {
-      setError('El nombre es requerido');
-      return;
-    }
 
     try {
       setLoading(true);
@@ -75,10 +65,9 @@ const UserForm = () => {
         tags: uniqueTags
       });
 
-      setSuccess(true);
+      toast.success('User data updated successfully');
     } catch (err) {
-      setError('Error al actualizar el usuario');
-      console.error(err);
+      toast.error('Error updating user data');
     } finally {
       setLoading(false);
     }
@@ -88,7 +77,7 @@ const UserForm = () => {
     try {
       const file = formData.get('image');
       if (!file) {
-        toast.error('No se seleccionó ninguna imagen.');
+        toast.error('None image selected');
         return;
       }
 
@@ -114,19 +103,15 @@ const UserForm = () => {
   return (
     <div className="max-w-md mx-auto p-6 bg-surface rounded-lg shadow-md">
       <Header />
-      <h2 className="text-2xl font-bold text-main mb-6">Editar información de usuario</h2>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-          {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">
-          Usuario editado exitosamente!
-        </div>
-      )}
+      <button
+        onClick={() => window.history.back()}
+        className="mb-4 text-sm text-primary hover:underline"
+        aria-label="Back Button"
+      >
+        &larr; Back
+      </button>
+      <h2 className="text-2xl font-bold text-main mb-6">Edit user data</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-6">
@@ -135,14 +120,14 @@ const UserForm = () => {
 
         <div className="mb-6">
           <label htmlFor="name" className="block text-sm font-medium text-subtle mb-1">
-            Nombre de usuario:
+            Name:
           </label>
           <input
             id="name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ingrese el nombre"
+            placeholder="Input your name"
             disabled={loading}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
           />
@@ -150,17 +135,17 @@ const UserForm = () => {
 
         <div className="mb-6">
           <label htmlFor="nationality" className="block text-sm font-medium text-subtle mb-1">
-            Nacionalidad:
+            Nationality:
           </label>
-          {/* <input
+          <input
             id="nationality"
             type="text"
             value={nationality}
             onChange={(e) => setNationality(e.target.value)}
-            placeholder="Ingresa tu nacionalidad"
+            placeholder="Input your nationality"
             disabled={loading}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
-          /> */}
+          />
           <CountrySelect
             value={nationality}
             onChange={setNationality}
@@ -173,7 +158,7 @@ const UserForm = () => {
           <label className="block text-sm font-medium text-subtle mb-2">Tags:</label>
 
           {loading && availableTags.length === 0 ? (
-            <p className="text-subtle">Cargando tags...</p>
+            <p className="text-subtle">Loading tags...</p>
           ) : (
             <div className="flex flex-wrap gap-3">
               {availableTags.map(tag => {
@@ -211,9 +196,9 @@ const UserForm = () => {
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Enviando...
+              Sending...
             </>
-          ) : 'Editar Usuario'}
+          ) : 'Edit user'}
         </button>
       </form>
     </div>
