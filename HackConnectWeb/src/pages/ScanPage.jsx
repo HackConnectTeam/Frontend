@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import QRScanner from '../components/QRScanner';
+import Header from '../components/static/Header';
 
 const ScanPage = () => {
   const navigate = useNavigate();
@@ -10,9 +11,8 @@ const ScanPage = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="bg-primary text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">Escáner QR</h1>
-      </header>
+            <Header />
+
 
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="bg-surface rounded-2xl shadow p-6 w-full max-w-md text-text-main">
