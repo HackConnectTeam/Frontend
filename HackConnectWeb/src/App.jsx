@@ -13,8 +13,6 @@ function App() {
       <Routes>
         <Route path="/" element={<ScanPage />} />
         <Route path="/user/:userId/edit" element={<UserForm />} />
-
-        {/* Rutas con el layout común */}
         <Route path="/user/:userId" element={<MainLayout />}>
           <Route path="challenges" element={<UserPage />} />
           <Route path="challenge/:id" element={<ChallengePage />} />

@@ -79,6 +79,13 @@ const UserForm = () => {
 
   return (
     <div className="max-w-md mx-auto p-6 bg-surface rounded-lg shadow-md">
+      <button
+        onClick={() => window.history.back()}
+        className="mb-4 text-sm text-primary hover:underline"
+        aria-label="Back Button"
+      >
+        &larr; Back
+      </button>
       <h2 className="text-2xl font-bold text-main mb-6">Edit user data</h2>
 
       <form onSubmit={handleSubmit}>
