@@ -9,17 +9,30 @@ const ScanPage = () => {
 
   const handleScan = async (userId) => {
     try {
-      // Crear usuario con los datos mínimos
-      await RealService.createUser({
-        id: userId
-      });
+      await RealService.getUser(userId)
+        .then((exists) => {
+          if (exists) {
+            // Si el usuario ya existe, navegar a su página
+            navigate(`/user/${encodeURIComponent(userId)}`);
+          } else {
+            // Si el usuario no existe, crear uno nuevo
+            createUser(userId);
+          }
+        });
+      } catch (error) {
+        // Crear usuario con los datos mínimos
+        try {
+          await RealService.createUser({
+            id: userId
+          });
+        } catch (error) {
+          console.error("Error al crear usuario:", error);
+          Toast.error("Error al crear usuario. Por favor, inténtalo de nuevo.");
+        }
 
-      // Navegar a la página del usuario
-      navigate(`/user/${encodeURIComponent(userId)}`);
-    } catch (error) {
-      console.error("Error al crear usuario:", error);
-      Toast.error("Error al crear usuario. Por favor, inténtalo de nuevo.");
-    }
+        // Navegar a la página del usuario
+        navigate(`/user/${encodeURIComponent(userId)}`);
+      }
   };
 
   return (
