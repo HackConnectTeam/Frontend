@@ -10,8 +10,7 @@ const ScanPage = () => {
     try {
       // Crear usuario con los datos mínimos
       await RealService.createUser({
-        id: 2,
-        name: userId
+        id: userId
       });
 
       // Navegar a la página del usuario

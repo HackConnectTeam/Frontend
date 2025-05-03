@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import RealService from '../services/RealService';
 
 const UserForm = () => {
-  // const { userId } = useParams();
-  const userId = 2; // For testing purposes, hardcode userId to 2
+  const { userId } = useParams();
 
   const [name, setName] = useState('');
   const [nationality, setNationality] = useState('');
@@ -27,10 +26,16 @@ const UserForm = () => {
 
         // Si hay ID, cargar datos del usuario
         if (userId) {
-          // const user = await RealService.getUser(userId);
           const user = await RealService.getUser(userId);
-          setName(user.name);
+          setName(user.name || '');
+          setNationality(user.nationality || '');
           setSelectedTags(user.tags || []);
+          // Para tags como strings
+          const userTags = Array.isArray(user.tags) ? user.tags : [user.tags];
+          const validTags = userTags.filter(tag =>
+            typeof tag === 'string' && tagsResponse.includes(tag)
+          );
+          setSelectedTags(validTags);
         }
       } catch (err) {
         setError(userId ? 'Error loading user data' : 'Error loading tags');
@@ -65,13 +70,12 @@ const UserForm = () => {
 
     try {
       setLoading(true);
-      await axios.put(`http://localhost:8000/users/${userId}`, {
-        name,
+      await axios.patch(`http://localhost:8000/users/${userId}`, {
+        name: name,
+        nationality: nationality,
         tags: selectedTags
       });
       setSuccess(true);
-      setName('');
-      setSelectedTags([]);
     } catch (err) {
       setError('Error al actualizar el usuario');
       console.error(err);
@@ -92,7 +96,7 @@ const UserForm = () => {
 
       {success && (
         <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md">
-          Usuario creado exitosamente!
+          Usuario editado exitosamente!
         </div>
       )}
 
@@ -134,12 +138,15 @@ const UserForm = () => {
             <p className="text-subtle">Cargando tags...</p>
           ) : (
             <div className="flex flex-wrap gap-3">
-              {availableTags.map(tag => (
+              {availableTags.map(tag => {
+              // Verificar si el tag está seleccionado
+              const isSelected = selectedTags.includes(tag);
+              return (
                 <div key={tag} className="flex items-center">
                   <input
                     type="checkbox"
                     id={`tag-${tag}`}
-                    checked={selectedTags.includes(tag)}
+                    checked={isSelected}
                     onChange={() => handleTagToggle(tag)}
                     disabled={loading}
                     className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
@@ -151,7 +158,8 @@ const UserForm = () => {
                     {tag}
                   </label>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>
