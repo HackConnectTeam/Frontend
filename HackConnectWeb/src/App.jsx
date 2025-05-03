@@ -3,6 +3,7 @@ import ScanPage from './pages/ScanPage';
 import UserPage from './pages/UserPage';
 import ChallengePage from './pages/ChallengePage';
 import UserForm from './pages/UserForm';
+import ScoreboardPage from './pages/ScoreboardPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/user/:userId" element={<UserPage />} />
         <Route path="/user/:userId/edit" element={<UserForm />} />
         <Route path="/user/:userId/challenge/:id" element={<ChallengePage />} />
+        <Route path="/user/:userId/scoreboard" element={<ScoreboardPage />} />
       </Routes>
     </Router>
   );

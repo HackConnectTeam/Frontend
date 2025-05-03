@@ -1,35 +1,37 @@
+import { useEffect, useState } from 'react';
 import Participation from './Participation';
+import RealService from '../../services/RealService';
+import { toast } from 'react-hot-toast';
+
+const postIds = [1, 2, 3];
 
 const ParticipationList = () => {
-  const participations = [
-    {
-      id: 1,
-      userName: "Laura González",
-      userImage: "/images/users/laura.jpg",
-      challengeImage: "/images/challenges/ia.jpg",
-    },
-    {
-      id: 2,
-      userName: "Carlos Méndez",
-      userImage: "/images/users/carlos.jpg",
-      challengeImage: "/images/challenges/energia.jpg",
-    },
-    {
-      id: 3,
-      userName: "María Torres",
-      userImage: "/images/users/maria.jpg",
-      challengeImage: "/images/challenges/hackeo.jpg",
-    },
-  ];
+  const [participations, setParticipations] = useState([]);
+
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        const results = await Promise.all(
+          postIds.map((id) => RealService.getPostById(id))
+        );
+        setParticipations(results);
+      } catch (err) {
+        console.error("Error cargando participaciones:", err);
+        toast.error("No se pudieron cargar las participaciones");
+      }
+    };
+
+    fetchAllPosts();
+  }, []);
 
   return (
     <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6">
-      {participations.map((item) => (
+      {participations.map((post) => (
         <Participation
-          key={item.id}
-          userName={item.userName}
-          userImage={item.userImage}
-          challengeImage={item.challengeImage}
+          key={post.id}
+          userName={post.user?.name || "Anónimo"}
+          userImage={post.user?.profile_image || "/placeholder-user.png"}
+          challengeImage={post.activity?.image || "/placeholder-challenge.jpg"}
         />
       ))}
     </div>

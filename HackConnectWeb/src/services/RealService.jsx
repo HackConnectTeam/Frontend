@@ -100,6 +100,36 @@ const RealService = {
       throw error;
     }
   },
+  // Obtener el leaderboard (puntuaciones de usuarios)
+  getScoreboard: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/leaderboard/`, {
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener el scoreboard:', error);
+      throw error;
+    }
+  },
+  // Obtener un post por ID
+  getPostById: async (postId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/post/${postId}`, {
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error al obtener el post ${postId}:`, error);
+      throw error;
+    }
+  },
+
+
 
 
 };
