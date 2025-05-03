@@ -1,71 +1,61 @@
-import { QrReader } from 'react-qr-reader';
-import { useState, useEffect } from 'react';
+import { Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+import { useEffect, useRef } from 'react';
 
 const QRScanner = ({ onScan }) => {
-  const [hasPermission, setHasPermission] = useState(null);
-  const [cameraDevices, setCameraDevices] = useState([]);
-  const [selectedDeviceId, setSelectedDeviceId] = useState('');
+  const scannerRef = useRef(null);
+  const qrScannerRef = useRef(null);
 
   useEffect(() => {
-    // Verify permissions and list available cameras
-    const checkPermissions = async () => {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === 'videoinput');
-        setCameraDevices(videoDevices);
+    if (!scannerRef.current) return;
 
-        if (videoDevices.length > 0) {
-          setSelectedDeviceId(videoDevices[0].deviceId);
-        }
-
-        // Request permissions explicitly
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasPermission(true);
-      } catch (err) {
-        console.error("Error al acceder a la cámara:", err);
-        setHasPermission(false);
-      }
+    // Configuración del scanner
+    const config = {
+      fps: 10,
+      qrbox: { width: 250, height: 250 },
+      rememberLastUsedCamera: true,
+      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
+      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
     };
 
-    checkPermissions();
-  }, []);
-
-  if (hasPermission === null) {
-    return <div className="text-center p-4">Checking camera permissions</div>;
-  }
-
-  if (hasPermission === false) {
-    return (
-      <div className="text-center p-4 text-red-500">
-        Permissions to access the camera are required to use this feature. Please, enable them in your browser settings.
-      </div>
+    // Inicializar scanner
+    qrScannerRef.current = new Html5QrcodeScanner(
+      scannerRef.current.id,
+      config,
+      false // verbose (mostrar logs en consola)
     );
-  }
 
-  if (cameraDevices.length === 0) {
-    return <div className="text-center p-4">There were no cameras found</div>;
-  }
+    // Manejar escaneos exitosos
+    const onScanSuccess = (decodedText, decodedResult) => {
+      onScan(decodedText);
+    };
+
+    // Manejar errores
+    const onScanError = (error) => {
+      console.warn('QR Scan error:', error);
+    };
+
+    // Renderizar scanner
+    qrScannerRef.current.render(onScanSuccess, onScanError);
+
+    // Limpieza al desmontar
+    return () => {
+      if (qrScannerRef.current) {
+        qrScannerRef.current.clear().catch(error => {
+          console.error("Failed to clear html5 qrcode scanner", error);
+        });
+      }
+    };
+  }, [onScan]);
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="relative aspect-square overflow-hidden rounded-lg border-2 border-blue-400">
-        <QrReader
-          constraints={{
-            deviceId: selectedDeviceId,
-            facingMode: 'environment'
-          }}
-          onResult={(result) => {
-            if (result) {
-              onScan(result.text);
-            }
-          }}
-          videoId="qr-video"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
+      <div
+        ref={scannerRef}
+        id="html5qr-scanner"
+        className="w-full aspect-square rounded-lg overflow-hidden border-2 border-blue-400"
+      />
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">Scan your QR Code</p>
+        <p className="text-sm text-gray-600">Escanea el código QR del usuario</p>
       </div>
     </div>
   );
