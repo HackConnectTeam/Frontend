@@ -1,63 +1,79 @@
-import { Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Html5Qrcode } from 'html5-qrcode';
 
 const QRScanner = ({ onScan }) => {
-  const scannerRef = useRef(null);
-  const qrScannerRef = useRef(null);
+  const qrCodeRegionId = 'html5qr-code-full-region';
+  const html5QrCodeRef = useRef(null);
+  const scannerRunningRef = useRef(false);
 
   useEffect(() => {
-    if (!scannerRef.current) return;
+    const element = document.getElementById(qrCodeRegionId);
+    if (!element) {
+      console.error(`Element with ID '${qrCodeRegionId}' not found.`);
+      return;
+    }
 
-    // Configuración del scanner
+    html5QrCodeRef.current = new Html5Qrcode(qrCodeRegionId);
+
     const config = {
       fps: 10,
-      qrbox: { width: 250, height: 250 },
-      rememberLastUsedCamera: true,
-      supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+      qrbox: 250
     };
 
-    // Inicializar scanner
-    qrScannerRef.current = new Html5QrcodeScanner(
-      scannerRef.current.id,
-      config,
-      false // verbose (mostrar logs en consola)
-    );
+    Html5Qrcode.getCameras()
+      .then(devices => {
+        const backCamera = devices.find(device =>
+          device.label.toLowerCase().includes('back') ||
+          device.label.toLowerCase().includes('trasera') ||
+          device.label.toLowerCase().includes('rear')
+        );
 
-    // Manejar escaneos exitosos
-    const onScanSuccess = (decodedText, decodedResult) => {
-      onScan(decodedText);
-    };
+        const cameraId = backCamera ? backCamera.id : devices[0]?.id;
 
-    // Manejar errores
-    const onScanError = (error) => {
-      console.warn('QR Scan error:', error);
-    };
+        if (!cameraId) {
+          console.error('No camera found');
+          return;
+        }
 
-    // Renderizar scanner
-    qrScannerRef.current.render(onScanSuccess, onScanError);
+        html5QrCodeRef.current.start(
+          cameraId,
+          config,
+          decodedText => {
+            if (scannerRunningRef.current) {
+              scannerRunningRef.current = false;
+              onScan(decodedText);
+              html5QrCodeRef.current.stop().then(() => {
+                html5QrCodeRef.current.clear();
+              }).catch(err => {
+                console.error('Failed to stop QR scanner after scan', err);
+              });
+            }
+          },
+          errorMessage => {
+            // Optional: console.warn(errorMessage);
+          }
+        ).then(() => {
+          scannerRunningRef.current = true;
+        });
+      })
+      .catch(err => {
+        console.error('Error getting cameras', err);
+      });
 
-    // Limpieza al desmontar
     return () => {
-      if (qrScannerRef.current) {
-        qrScannerRef.current.clear().catch(error => {
-          console.error("Failed to clear html5 qrcode scanner", error);
+      if (scannerRunningRef.current && html5QrCodeRef.current) {
+        html5QrCodeRef.current.stop().then(() => {
+          html5QrCodeRef.current.clear();
+          scannerRunningRef.current = false;
+        }).catch(err => {
+          console.error('Failed to stop QR scanner on cleanup', err);
         });
       }
     };
   }, [onScan]);
 
   return (
-    <div className="w-full max-w-md mx-auto">
-      <div
-        ref={scannerRef}
-        id="html5qr-scanner"
-        className="w-full aspect-square rounded-lg overflow-hidden border-2 border-blue-400"
-      />
-      <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">Escanea el código QR del usuario</p>
-      </div>
-    </div>
+    <div id={qrCodeRegionId} className="rounded-xl shadow-md w-full max-w-md mx-auto" />
   );
 };
 
