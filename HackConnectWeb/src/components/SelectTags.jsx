@@ -12,7 +12,7 @@ const SelectTags = ({ selected = [], onChange, disabled = false }) => {
         // Convertir a formato de react-select
         const formatted = data.map((tag) => ({
           value: tag,
-          label: `#${tag}`,
+          label: `${tag}`,
         }));
         setOptions(formatted);
       } catch (err) {
