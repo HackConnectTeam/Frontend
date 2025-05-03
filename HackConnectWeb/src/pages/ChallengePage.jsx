@@ -65,7 +65,8 @@ const ChallengePage = () => {
         <p className="text-lg text-text-subtle mb-10">{challenge.description}</p>
 
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <ParticipationList />
+        <ParticipationList activityId={id} />
+
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://backend-unz5.onrender.com';
 
 const RealService = {
   // Obtener todos los tags
@@ -126,6 +126,17 @@ const RealService = {
       return response.data;
     } catch (error) {
       console.error(`Error al obtener el post ${postId}:`, error);
+      throw error;
+    }
+  },
+  getPosts: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/post/`, {
+        headers: { accept: 'application/json' },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener los posts:', error);
       throw error;
     }
   },

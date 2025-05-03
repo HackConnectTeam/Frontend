@@ -1,8 +1,7 @@
-const Participation = ({ userName, userImage, challengeImage }) => {
+const Participation = ({ userName, userImage }) => {
   return (
     <div className="bg-surface rounded-2xl shadow-md p-4 max-w-md w-full">
-
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-gray-300 overflow-hidden">
           <img
             src={userImage}
@@ -10,13 +9,10 @@ const Participation = ({ userName, userImage, challengeImage }) => {
             className="w-full h-full object-cover"
           />
         </div>
-        <div>
-          <h3 className="text-text-main font-semibold text-lg">
-            {userName}
-          </h3>
-        </div>
+        <p className="text-text-main text-lg">
+          <span className="text-text-main font-semibold text-lg">{userName}</span> ha completado el reto
+        </p>
       </div>
-
     </div>
   );
 };
