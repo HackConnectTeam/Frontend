@@ -9,19 +9,19 @@ const ScanPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <h1 className="text-xl font-bold text-center">QR Scanner</h1>
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-primary text-white p-4 shadow-md">
+        <h1 className="text-xl font-bold text-center">Escáner QR</h1>
       </header>
 
       <main className="flex-grow flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <div className="bg-surface rounded-2xl shadow p-6 w-full max-w-md text-text-main">
           <QRScanner onScan={handleScan} />
         </div>
       </main>
 
-      <footer className="bg-gray-800 text-white p-4 text-center text-sm">
-        <p>Focus the QR code within the scanning area</p>
+      <footer className="bg-secondary text-white p-4 text-center text-sm">
+        <p>Enfoca el código QR dentro del área de escaneo</p>
       </footer>
     </div>
   );
