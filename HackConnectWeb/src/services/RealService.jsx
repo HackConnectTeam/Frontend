@@ -178,6 +178,38 @@ const RealService = {
         throw error;
       }
     },
+    // Subir imagen base64 al endpoint /ToMii/
+  postToMii: async (userId, imageBase64) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/ToMii/`, {
+        user_id: userId,
+        image_path: imageBase64,
+      }, {
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al hacer POST a /ToMii/:', error);
+      throw error;
+    }
+  },
+  getCountries: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/countries/`, {
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener países:', error);
+      throw error;
+    }
+  },
+
 };
 
 export default RealService;

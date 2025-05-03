@@ -8,6 +8,10 @@ const UserPage = () => {
   const { userId } = useParams();
   const [qrData, setQrData] = useState('');
   const [activities, setActivities] = useState([]);
+  const [completedCount, setCompletedCount] = useState(0);
+  const [userPoints, setUserPoints] = useState(0);
+
+
 
   useEffect(() => {
     if (userId) {
@@ -17,12 +21,25 @@ const UserPage = () => {
     // Obtain activities from backend
     const fetchActivities = async () => {
       try {
-        const data = await RealService.getActivities();
-        setActivities(data);
+        const [activitiesData, posts, userData] = await Promise.all([
+          RealService.getActivities(),
+          RealService.getPosts(),
+          RealService.getUser(userId)
+        ]);
+
+        const completadosPorUsuario = posts.filter(
+          post => post.to_user_id === userId && post.status === 'completed'
+        );
+
+        setCompletedCount(completadosPorUsuario.length);
+        setActivities(activitiesData);
+        setUserPoints(userData.points || 0);
       } catch (error) {
-        console.error("Error loading activities:", error);
+        console.error("Error loading activities or posts:", error);
       }
     };
+
+
 
     fetchActivities();
   }, [userId]);
@@ -38,13 +55,31 @@ const UserPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Header userId={userId} />
       <main className="flex-grow flex flex-col items-center justify-center p-4 gap-6">
+      <div className="w-full max-w-4xl flex items-center justify-between mb-6">
+
+
+        <div className="flex-1 text-center">
+          <h2 className="text-2xl font-bold text-primary">Challenge</h2>
+          <p className="text-text-subtle">{completedCount} / {activities.length} retos completados</p>
+        </div>
+        <div className="text-right text-primary font-semibold text-lg">
+          {userPoints} pts
+        </div>
+
+      </div>
+
+
+
+
         <ChallengeCardsList challenges={activities} userId={userId} />
       </main>
+
       <footer className="bg-secondary text-white p-4 text-center text-sm">
         <p>HackUPC 2025</p>
       </footer>
     </div>
   );
+
 };
 
 export default UserPage;
