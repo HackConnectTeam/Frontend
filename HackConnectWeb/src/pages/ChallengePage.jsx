@@ -1,13 +1,21 @@
 import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Header from '../components/static/Header';
 import ParticipationList from '../components/challenges/ParticipationList';
 import FloatingQRButton from '../components/FloatingQRButton';
 
 const ChallengePage = () => {
-  const { id } = useParams();
-  const { userId } = useParams();
+  const { id, userId } = useParams();
 
+  const [scannedUserId, setScannedUserId] = useState(null); // id persona encontrada
+
+  const handleScan = (scannedData) => {
+    setScannedUserId(scannedData);
+    console.log("Código escaneado en ChallengePage:", scannedData);
+    console.log("ID usuario:", userId);
+    console.log("ID challenge:", id);
+
+  };
   const challenges = useMemo(() => [
     {
       id: 1,
@@ -43,13 +51,13 @@ const ChallengePage = () => {
         <h1 className="text-3xl font-bold text-primary mb-4">{challenge.title}</h1>
         <p className="text-lg text-text-subtle mb-10">{challenge.description}</p>
 
-        {/* Aquí vendrá la futura lista de tarjetas */}
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           <ParticipationList />
         </div>
       </div>
 
-      <FloatingQRButton />
+      <FloatingQRButton onScan={handleScan} />
+
     </div>
   );
 };
