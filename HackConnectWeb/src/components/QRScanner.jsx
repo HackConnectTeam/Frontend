@@ -8,36 +8,61 @@ const QRScanner = ({ onScan }) => {
   useEffect(() => {
     if (!scannerRef.current) return;
 
-    // Configuración del scanner
+    // Scanner configuration
     const config = {
       fps: 10,
       qrbox: { width: 250, height: 250 },
       rememberLastUsedCamera: true,
       supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA],
-      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE]
+      formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
     };
 
-    // Inicializar scanner
+    // Initialize the scanner
     qrScannerRef.current = new Html5QrcodeScanner(
       scannerRef.current.id,
       config,
-      false // verbose (mostrar logs en consola)
+      false
     );
 
-    // Manejar escaneos exitosos
     const onScanSuccess = (decodedText, decodedResult) => {
       onScan(decodedText);
     };
 
-    // Manejar errores
     const onScanError = (error) => {
       console.warn('QR Scan error:', error);
     };
 
-    // Renderizar scanner
-    qrScannerRef.current.render(onScanSuccess, onScanError);
+    // Function to select the back camera
+    const startScannerWithBackCamera = async () => {
+      try {
+        const cameras = await Html5Qrcode.getCameras();
+        if (cameras && cameras.length > 1) {
+          // Find the back camera (usually the second one on mobile devices)
+          const backCamera = cameras.find(
+            (camera) => camera.label.includes("back") || camera.label.includes("rear")
+          ) || cameras[1]; // If a back camera is found, start the scanner with it
 
-    // Limpieza al desmontar
+          if (backCamera) {
+            await qrScannerRef.current.start(
+              backCamera.id,
+              { fps: config.fps, qrbox: config.qrbox },
+              onScanSuccess,
+              onScanError
+            );
+            return;
+          }
+        }
+
+        // If no back camera is found, start with the default one
+        qrScannerRef.current.render(onScanSuccess, onScanError);
+      } catch (err) {
+        console.error("Error al acceder a las cámaras:", err);
+        qrScannerRef.current.render(onScanSuccess, onScanError);
+      }
+    };
+
+    startScannerWithBackCamera();
+
     return () => {
       if (qrScannerRef.current) {
         qrScannerRef.current.clear().catch(error => {
@@ -55,7 +80,7 @@ const QRScanner = ({ onScan }) => {
         className="w-full aspect-square rounded-lg overflow-hidden border-2 border-blue-400"
       />
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-600">Escanea el código QR del usuario</p>
+        <p className="text-sm text-gray-600">Scan your QR Code</p>
       </div>
     </div>
   );
