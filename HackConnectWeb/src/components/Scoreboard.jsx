@@ -12,12 +12,11 @@ const Scoreboard = () => {
   useEffect(() => {
     const fetchScores = async () => {
       try {
-        const data = await RealService.getScoreboard(); // futuro endpoint real
+        const data = await RealService.getScoreboard();
         const sorted = [...data].sort((a, b) => b.points - a.points);
         setUsers(sorted);
       } catch (error) {
-        console.error("Error al cargar el scoreboard:", error);
-        toast.error("No se pudo cargar el scoreboard");
+        toast.error("The scoreboard is not available");
       } finally {
         setLoading(false);
       }
@@ -29,7 +28,7 @@ const Scoreboard = () => {
   if (loading) {
     return (
       <div className="text-center p-4 text-text-subtle">
-        Cargando puntuaciones...
+        Loading scores...
       </div>
     );
   }
@@ -37,7 +36,7 @@ const Scoreboard = () => {
   if (!users.length) {
     return (
       <div className="text-center p-4 text-text-subtle">
-        No hay puntuaciones disponibles.
+        There are no scores available.
       </div>
     );
   }
@@ -60,7 +59,7 @@ const Scoreboard = () => {
                 <span className={`font-semibold text-xl ${textColor}`}>
                   {medal}
                 </span>
-                <span className="text-text-main font-medium">{user.name?.trim() ? user.name : 'Anónimo'}</span>
+                <span className="text-text-main font-medium">{user.name?.trim() ? user.name : 'Anonimous'}</span>
               </div>
               <span className="text-primary font-mono text-lg">
                 {user.total_points} pts

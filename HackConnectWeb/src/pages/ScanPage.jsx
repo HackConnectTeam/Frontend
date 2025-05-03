@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from 'react-router-dom';
 import QRScanner from '../components/QRScanner';
 import Header from '../components/static/Header';
@@ -12,25 +12,21 @@ const ScanPage = () => {
       await RealService.getUser(userId)
         .then((exists) => {
           if (exists) {
-            // Si el usuario ya existe, navegar a su página
+            // If the user exists, navigate to their page
             navigate(`/user/${encodeURIComponent(userId)}`);
           } else {
-            // Si el usuario no existe, crear uno nuevo
+            // If the user does not exist, create a new user
             createUser(userId);
           }
         });
       } catch (error) {
-        // Crear usuario con los datos mínimos
         try {
-          await RealService.createUser({
-            id: userId
-          });
+          createUser(userId);
         } catch (error) {
-          console.error("Error al crear usuario:", error);
-          Toast.error("Error al crear usuario. Por favor, inténtalo de nuevo.");
+          Toast.error("Error when creating the user. Please, try it again.");
         }
 
-        // Navegar a la página del usuario
+        // Navigate to the user page
         navigate(`/user/${encodeURIComponent(userId)}`);
       }
   };
@@ -46,7 +42,7 @@ const ScanPage = () => {
       </main>
 
       <footer className="bg-secondary text-white p-4 text-center text-sm">
-        <p>Enfoca el código QR dentro del área de escaneo</p>
+        <p>Focus the QR Code inside the scan area</p>
       </footer>
     </div>
   );

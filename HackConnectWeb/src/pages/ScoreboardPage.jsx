@@ -3,7 +3,7 @@ import Header from '../components/static/Header';
 import Scoreboard from '../components/Scoreboard';
 
 const ScoreboardPage = () => {
-  const { userId } = useParams(); // 🔧 necesario para el Header
+  const { userId } = useParams();
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
