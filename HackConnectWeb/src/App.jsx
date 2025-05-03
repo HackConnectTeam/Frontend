@@ -4,6 +4,7 @@ import UserPage from './pages/UserPage';
 import ChallengePage from './pages/ChallengePage';
 import UserForm from './pages/UserForm';
 import ScoreboardPage from './pages/ScoreboardPage';
+import ProjectsPage from './pages/ProjectsPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/user/:userId/edit" element={<UserForm />} />
         <Route path="/user/:userId/challenge/:id" element={<ChallengePage />} />
         <Route path="/user/:userId/scoreboard" element={<ScoreboardPage />} />
+        <Route path="/user/:userId/projects" element={<ProjectsPage />} />
       </Routes>
     </Router>
   );

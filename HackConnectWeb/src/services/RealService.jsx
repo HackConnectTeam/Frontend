@@ -210,6 +210,42 @@ const RealService = {
     }
   },
 
+  getProjects: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/project/`, {
+        headers: { accept: 'application/json' }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error al obtener proyectos:', error);
+      throw error;
+    }
+  },
+
+  createProject: async (projectData) => {
+    try {
+      const { user_id, ...rest } = projectData;
+
+      const response = await axios.post(
+        `${API_BASE_URL}/project/?user_id=${encodeURIComponent(user_id)}`,
+        rest,
+        {
+          headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error('Error al crear proyecto:', error);
+      throw error;
+    }
+  },
+
+
+
 };
 
 export default RealService;
