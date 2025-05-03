@@ -20,21 +20,25 @@ const ChallengeCardsList = () => {
       title: "Energía sostenible",
       description: "Prototipa una solución digital para reducir el consumo energético."
     },
-    // ...
   ];
 
   return (
-    <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-6">
-      {challenges.map((challenge) => (
-        <ChallengeCard
-          key={challenge.id}
-          title={challenge.title}
-          description={challenge.description}
-          navigateTo={`/user/${encodeURIComponent(userId)}/challenge/${challenge.id}`}
-        />
-      ))}
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-primary mb-4 text-center">Explora los Retos</h2>
+
+      <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {challenges.map((challenge) => (
+          <ChallengeCard
+            key={challenge.id}
+            title={challenge.title}
+            description={challenge.description}
+            navigateTo={`/user/${encodeURIComponent(userId)}/challenge/${challenge.id}`}
+          />
+        ))}
+      </div>
     </div>
   );
+
 };
 
 export default ChallengeCardsList;
