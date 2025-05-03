@@ -22,3 +22,14 @@ body {
 .btn-primary {
   @apply px-4 py-2 rounded-xl text-white bg-primary hover:bg-primaryDark transition;
 }
+
+/* Estilo para la barra de navegación activa */
+.active-nav {
+  color: #3b82f6; /* Color primary */
+  font-weight: 500;
+}
+
+/* Asegurar que el contenido no quede oculto detrás de la barra */
+body {
+  padding-bottom: 64px;
+}

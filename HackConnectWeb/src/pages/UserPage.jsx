@@ -40,9 +40,6 @@ const UserPage = () => {
       <main className="flex-grow flex flex-col items-center justify-center p-4 gap-6">
         <ChallengeCardsList challenges={activities} userId={userId} />
       </main>
-      <footer className="bg-secondary text-white p-4 text-center text-sm">
-        <p>HackUPC 2025</p>
-      </footer>
     </div>
   );
 };
