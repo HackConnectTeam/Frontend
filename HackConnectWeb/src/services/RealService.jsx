@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://backend-unz5.onrender.com';
+const API_BASE_URL = 'https://xxx2.lamelas24.com';
 
 const RealService = {
   // Obtener todos los tags
@@ -178,24 +178,47 @@ const RealService = {
         throw error;
       }
     },
+
     // Subir imagen base64 al endpoint /to_mii/
   postToMii: async (userId, imageBase64) => {
     try {
       const response = await axios.post(`${API_BASE_URL}/to_mii/`, {
-        user_id: userId,
-        image_base64: imageBase64,
+        request: {
+          image_base64: imageBase64
+        },
+        user_id: userId
       }, {
         headers: {
-          accept: 'application/json',
+          'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
       });
+
+      // Return the complete response data which includes status and message
       return response.data;
     } catch (error) {
-      console.error('Error al hacer POST a /ToMii/:', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('Error response from server:', error.response.data);
+        console.error('Status code:', error.response.status);
+
+        // For 422 Validation Error, you might want to handle it specifically
+        if (error.response.status === 422) {
+          console.error('Validation errors:', error.response.data.detail);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Request setup error:', error.message);
+      }
+
       throw error;
     }
   },
+
   getCountries: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/countries/`, {

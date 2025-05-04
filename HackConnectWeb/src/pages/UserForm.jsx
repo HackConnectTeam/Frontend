@@ -76,29 +76,54 @@ const UserForm = () => {
 
   const handleImageUpload = async (formData) => {
     try {
-      console.log(formData)
       const file = formData.get('image');
       if (!file) {
-        toast.error('None image selected');
+        toast.error('No image selected');
         return;
       }
 
-      const toBase64 = (file) =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload an image file');
+        return;
+      }
+
+      // Convert image to base64
+      const toBase64 = (file) => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Extract only the base64 part (remove data:image/... prefix)
+          const result = reader.result;
+          const base64Data = result.split(',')[1];
+          resolve(base64Data);
+        };
+        reader.onerror = (error) => reject(error);
+      });
 
       const base64Image = await toBase64(file);
 
-      await RealService.postToMii(userId, base64Image);
-      toast.success('Imagen enviada correctamente');
+      // Call the API
+      const response = await RealService.postToMii(userId, base64Image);
+
+      // Handle response
+      if (response.status === 'success') {
+        toast.success(response.message || 'Image processed successfully');
+      } else {
+        toast.warning(response.message || 'Image processing completed with warnings');
+      }
 
     } catch (error) {
-      console.error('Error al subir imagen:', error);
-      toast.error('Error al subir imagen');
+      console.error('Error uploading image:', error);
+
+      // More specific error messages
+      if (error.response?.data?.message) {
+        toast.error(`Error: ${error.response.data.message}`);
+      } else if (error.message) {
+        toast.error(`Error: ${error.message}`);
+      } else {
+        toast.error('Error uploading image');
+      }
     }
   };
 

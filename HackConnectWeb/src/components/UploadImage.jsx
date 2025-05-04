@@ -3,36 +3,16 @@ import { toast } from 'react-hot-toast';
 
 const ImageUploader = ({ onUpload }) => {
   const [imagePreview, setImagePreview] = useState(null);
-  const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
     if (selected && selected.type.startsWith('image/')) {
-      setFile(selected);
       setImagePreview(URL.createObjectURL(selected));
+      const formData = new FormData();
+      formData.append('image', selected);
+      onUpload(formData);
     } else {
       toast.error('Por favor, selecciona una imagen válida.');
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!file) {
-      toast.error('No hay imagen seleccionada.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      // Aquí puedes cambiar por tu endpoint real
-      // const response = await axios.post('/upload', formData);
-      // const imageUrl = response.data.url;
-      onUpload(formData); // se pasa al padre
-      toast.success('Imagen cargada con éxito');
-    } catch (error) {
-      console.error('Error subiendo imagen:', error);
-      toast.error('Error al subir imagen');
     }
   };
 
@@ -45,7 +25,7 @@ const ImageUploader = ({ onUpload }) => {
           onChange={handleFileChange}
           className="hidden"
         />
-        Seleccionar imagen
+        Select an image
       </label>
 
       {imagePreview && (
