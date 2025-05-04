@@ -14,7 +14,7 @@ const FloatingQRButton = ({ onScan }) => {
       {!showScanner && (
         <button
           onClick={() => setShowScanner(true)}
-          className="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-lg text-3xl flex items-center justify-center hover:bg-primary/90 transition"
+          className="fixed bottom-20 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-lg text-3xl flex items-center justify-center hover:bg-primary/90 transition"
           aria-label="Scan your QR"
         >
           +

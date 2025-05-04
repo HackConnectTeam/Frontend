@@ -12,7 +12,6 @@ const ChallengeCardsList = ({ challenges, userId }) => {
         const ids = data.map(item => item.activity_id);
         setCompletedIds(ids);
       } catch (error) {
-        console.log(error?.response?.status)
         if (error?.response?.status === 404) {
           // No hay retos completados: caso esperado
           setCompletedIds([]);

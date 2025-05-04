@@ -57,7 +57,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
         title: finalTitle,
         description_raw: description,
         generated_name: generated_name,
-        user_id: userId, // reemplaza si tienes uno real
+        user_id: userId,
         github_url: githubUrl,
         tags,
       };

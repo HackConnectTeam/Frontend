@@ -52,7 +52,7 @@ const ChallengePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background text-text-main">
+    <div className="min-h-screen bg-background text-text-main pb-24">
       <Header userId={userId} />
 
       <div className="max-w-4xl mx-auto px-4 py-12">
