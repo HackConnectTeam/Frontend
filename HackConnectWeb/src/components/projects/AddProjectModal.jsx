@@ -1,12 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
+import { useParams } from 'react-router-dom';
+
 import RealService from '../../services/RealService';
 import { toast } from 'react-hot-toast';
 import SelectTags from '../SelectTags';
 
-const AddProjectModal = ({ onClose, onSuccess }) => {
+const AddProjectModal = ({ onClose, onSuccess}) => {
+  const { userId } = useParams();
   const [title, setTitle] = useState('');
   const [generated_name, setGenerateName] = useState('');
   const [description, setDescription] = useState('');
+  const [githubUrl, setGithubUrl] = useState('');
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(false);
   const [suggestedTitles, setSuggestedTitles] = useState([]);
@@ -27,7 +31,7 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
 
   const handleGenerateTitle = async () => {
     try {
-      const result = await RealService.generateProjectName(200, description);
+      const result = await RealService.generateProjectName(userId, description);
       const suggestions = [result.name1, result.name2, result.name3];
       setSuggestedTitles(suggestions);
       setGenerateName(result.name1);
@@ -55,14 +59,14 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
         title: finalTitle,
         description_raw: description,
         generated_name: generated_name,
-        user_id: 200, // reemplaza con el ID real si lo tienes
-        //team_id: 0,   // ajusta según tu lógica
+        user_id: userId, // reemplaza si tienes uno real
+        github_url: githubUrl,
         tags,
       };
 
       await RealService.createProject(projectData);
       toast.success('Proyecto creado');
-      onSuccess(); // notificar al padre
+      onSuccess();
       onClose();
     } catch {
       toast.error('Error al crear proyecto');
@@ -131,6 +135,14 @@ const AddProjectModal = ({ onClose, onSuccess }) => {
               ))}
             </div>
           )}
+
+          <input
+            type="url"
+            placeholder="Enlace a GitHub (opcional)"
+            value={githubUrl}
+            onChange={(e) => setGithubUrl(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded"
+          />
 
           <SelectTags selected={tags} onChange={setTags} disabled={loading} />
 

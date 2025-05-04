@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useParams } from 'react';
 import ProjectList from '../components/projects/ProjectList';
 import Header from '../components/static/Header';
 import RealService from '../services/RealService';
