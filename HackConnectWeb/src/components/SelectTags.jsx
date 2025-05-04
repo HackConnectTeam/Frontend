@@ -9,7 +9,8 @@ const SelectTags = ({ selected = [], onChange, disabled = false }) => {
     const fetchTags = async () => {
       try {
         const data = await RealService.getTags();
-        // Convertir a formato de react-select
+
+        // Convert to format required by react-select
         const formatted = data.map((tag) => ({
           value: tag,
           label: `${tag}`,
@@ -31,7 +32,7 @@ const SelectTags = ({ selected = [], onChange, disabled = false }) => {
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-subtle mb-1">
-        Tags:
+        Tags
       </label>
       <Select
         isMulti

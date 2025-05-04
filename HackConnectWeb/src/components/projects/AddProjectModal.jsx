@@ -20,9 +20,8 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
     const loadTags = async () => {
       try {
         const data = await RealService.getTags();
-        // Si necesitas guardar tags disponibles en algún lado, agrégalo
       } catch {
-        toast.error('No se pudieron cargar los tags');
+        toast.error('Tags could not be loaded');
       }
     };
 
@@ -37,8 +36,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
       setGenerateName(result.name1);
       setHasGenerated(true);
     } catch (err) {
-      console.error('Error generando título:', err);
-      toast.error('No se pudo generar el título');
+      toast.error('Title could not be generated');
     }
   };
 
@@ -49,7 +47,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
     const finalTitle = title.trim() || generated_name;
 
     if (!hasGenerated || !generated_name) {
-      toast.error('Primero debes generar sugerencias');
+      toast.error('Suggestions should be generated first');
       setLoading(false);
       return;
     }
@@ -65,11 +63,11 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
       };
 
       await RealService.createProject(projectData);
-      toast.success('Proyecto creado');
+      toast.success('Project created');
       onSuccess();
       onClose();
     } catch {
-      toast.error('Error al crear proyecto');
+      toast.error('Error when creating the project');
     } finally {
       setLoading(false);
     }
@@ -78,10 +76,10 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-        <h2 className="text-xl font-bold text-primary mb-4">Nuevo Proyecto</h2>
+        <h2 className="text-xl font-bold text-primary mb-4">New Project</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
-            placeholder="Descripción"
+            placeholder="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
@@ -90,7 +88,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
 
           <input
             type="text"
-            placeholder="Título (opcional)"
+            placeholder="Title (optional)"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
@@ -99,7 +97,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
           <div className="flex items-center gap-2">
             <input
               type="text"
-              placeholder="Nombre generado"
+              placeholder="Generated name"
               value={generated_name}
               onChange={(e) => setGenerateName(e.target.value)}
               required
@@ -119,7 +117,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
 
           {suggestedTitles.length > 0 && (
             <div className="mt-2 space-y-1">
-              <p className="text-sm text-subtle">Sugerencias:</p>
+              <p className="text-sm text-subtle">Suggestions</p>
               {suggestedTitles.map((name, idx) => (
                 <button
                   key={idx}
@@ -138,7 +136,7 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
 
           <input
             type="url"
-            placeholder="Enlace a GitHub (opcional)"
+            placeholder="Link to github (optional)"
             value={githubUrl}
             onChange={(e) => setGithubUrl(e.target.value)}
             className="w-full p-2 border border-gray-300 rounded"
@@ -152,14 +150,14 @@ const AddProjectModal = ({ onClose, onSuccess}) => {
               onClick={onClose}
               className="px-4 py-2 bg-gray-200 text-black rounded"
             >
-              Cancelar
+              Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
               className="px-4 py-2 bg-primary text-white rounded"
             >
-              {loading ? 'Enviando...' : 'Crear'}
+              {loading ? 'Sending...' : 'Create'}
             </button>
           </div>
         </form>

@@ -8,7 +8,7 @@ const MainLayout = ({ userId }) => {
   const finalUserId = userId || params.userId;
 
   useEffect(() => {
-    // Si estamos en la ruta base (/user/:userId), redirigir a challenges
+    // If we are on the base route (/user/:userId), redirect to challenges
     if (window.location.pathname === `/user/${finalUserId}`) {
       navigate(`/user/${finalUserId}/challenges`, { replace: true });
     }

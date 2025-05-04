@@ -1,11 +1,10 @@
-import { useParams } from 'react-router-dom';
 import ChallengeCard from './ChallengeCard';
 
 const ChallengeCardsList = ({ challenges, userId }) => {
   if (!challenges || challenges.length === 0) {
     return (
       <div className="p-6 text-center text-text-subtle">
-        <p className="text-lg">Lista de retos vacía</p>
+        <p className="text-lg">There are no challenges.</p>
       </div>
     );
   }

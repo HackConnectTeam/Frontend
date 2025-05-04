@@ -58,7 +58,7 @@ const UserPage = () => {
       <div className="w-full max-w-4xl flex items-center justify-between mb-6">
         <div className="flex-1 text-center">
           <h2 className="text-2xl font-bold text-primary">Challenge</h2>
-          <p className="text-text-subtle">{completedCount} / {activities.length} retos completados</p>
+          <p className="text-text-subtle">{completedCount} / {activities.length} completed challenges</p>
         </div>
         <div className="text-right text-primary font-semibold text-lg">
           {userPoints} pts

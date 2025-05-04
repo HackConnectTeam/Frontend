@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import RealService from '../../services/RealService';
+import toast from 'react-hot-toast';
 
 const Project = ({ title, description_raw, user_id, tags = [] }) => {
 
@@ -21,7 +22,7 @@ const Project = ({ title, description_raw, user_id, tags = [] }) => {
         }
 
       } catch (err) {
-        console.error('Error cargando detalles del proyecto:', err);
+        toast.error('Error loading project details');
       }
     };
 
@@ -34,7 +35,7 @@ const Project = ({ title, description_raw, user_id, tags = [] }) => {
       <p className="text-text-subtle mb-4">{description_raw}</p>
 
       <div className="text-sm text-text-main mb-2">
-        <span className="font-semibold">Autor:</span> {userName}
+        <span className="font-semibold">Author:</span> {userName}
       </div>
 
     </div>

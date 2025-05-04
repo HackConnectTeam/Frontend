@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const OnboardingPage = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleContinue = () => {
@@ -55,7 +53,7 @@ const OnboardingPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 to-purple-900 text-white flex flex-col">
-      {/* Header Fijo */}
+      {/* Header */}
       <header className="p-4 bg-gradient-to-b from-blue-900 to-blue-800 sticky top-0 z-10">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold">HackConnect</h1>
@@ -70,7 +68,7 @@ const OnboardingPage = () => {
           </button>
         </div>
 
-        {/* Step Counter Fijo */}
+        {/* Step Counter */}
         <div className="flex justify-center space-x-2 mt-3">
           {steps.map((_, index) => (
             <div
@@ -83,15 +81,15 @@ const OnboardingPage = () => {
         </div>
       </header>
 
-      {/* Contenido Scrollable */}
+      {/* Scrollable content*/}
       <main className="flex-1 overflow-y-auto py-4 px-6">
         <div className="max-w-md mx-auto flex flex-col items-center">
-          {/* Título */}
+          {/* Title */}
           <h2 className="text-2xl font-bold mb-6 text-center">
             {steps[currentStep].title}
           </h2>
 
-          {/* Contenido Principal */}
+          {/* Principal content */}
           <div className="w-full mb-6">
             {typeof steps[currentStep].content === 'string' ? (
               <p className="text-lg text-center">{steps[currentStep].content}</p>
@@ -100,7 +98,7 @@ const OnboardingPage = () => {
             )}
           </div>
 
-          {/* Imagen/Ilustración */}
+          {/* Image */}
           <div className="bg-white bg-opacity-10 rounded-xl p-8 w-full flex items-center justify-center mb-6">
             <span className="text-5xl">
               {steps[currentStep].image === "welcome" && "👋"}
@@ -112,7 +110,7 @@ const OnboardingPage = () => {
         </div>
       </main>
 
-      {/* Botón Fijo en la parte inferior */}
+      {/* Fixed bottom button*/}
       <div className="sticky bottom-0 bg-gradient-to-t from-purple-900 to-purple-800 pt-4 pb-6 px-6">
         <button
           onClick={handleContinue}

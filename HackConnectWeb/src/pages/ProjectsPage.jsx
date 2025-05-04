@@ -3,6 +3,7 @@ import ProjectList from '../components/projects/ProjectList';
 import Header from '../components/static/Header';
 import RealService from '../services/RealService';
 import AddProjectModal from '../components/projects/AddProjectModal';
+import toast from 'react-hot-toast';
 
 const ProjectsPage = () => {
     const [showModal, setShowModal] = useState(false);
@@ -14,7 +15,7 @@ const ProjectsPage = () => {
             const data = await RealService.getProjects();
             setProjects(data);
           } catch (err) {
-            console.error('Error cargando proyectos:', err);
+            toast.error('No se pudieron cargar los proyectos');
           } finally {
             setLoading(false);
           }
@@ -40,7 +41,7 @@ const ProjectsPage = () => {
 
             <ProjectList projects={projects} loading={loading} />
 
-            {/* Botón flotante */}
+            {/* Float button */}
             <button
                     onClick={() => setShowModal(true)}
                     className="fixed bottom-24 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-xl hover:shadow-2xl transition-all z-30 flex items-center justify-center"
@@ -70,10 +71,6 @@ const ProjectsPage = () => {
             />
             )}
         </main>
-
-        <footer className="bg-secondary text-white p-4 text-center text-sm">
-            <p>HackUPC 2025</p>
-        </footer>
     </div>
   );
 };

@@ -13,8 +13,7 @@ const ProjectList = () => {
         const data = await RealService.getProjects();
         setProjects(data);
       } catch (error) {
-        console.error('Error cargando proyectos:', error);
-        toast.error('No se pudieron cargar los proyectos');
+        toast.error('Projects could not be loaded');
       } finally {
         setLoading(false);
       }
@@ -26,7 +25,7 @@ const ProjectList = () => {
   if (loading) {
     return (
       <div className="text-center text-text-subtle p-6">
-        Cargando proyectos...
+        Loading projects...
       </div>
     );
   }
@@ -34,7 +33,7 @@ const ProjectList = () => {
   if (!projects.length) {
     return (
       <div className="text-center text-text-subtle p-6">
-        No hay proyectos disponibles.
+        There are no projects available.
       </div>
     );
   }

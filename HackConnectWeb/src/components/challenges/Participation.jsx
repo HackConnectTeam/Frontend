@@ -10,7 +10,7 @@ const Participation = ({ userName, userImage }) => {
           />
         </div>
         <p className="text-text-main text-lg">
-          <span className="text-text-main font-semibold text-lg">{userName}</span> ha completado el reto
+          <span className="text-text-main font-semibold text-lg">{userName}</span> has completed the challenge!
         </p>
       </div>
     </div>

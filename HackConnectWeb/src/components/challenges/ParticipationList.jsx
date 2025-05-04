@@ -11,7 +11,7 @@ const ParticipationList = ({ activityId }) => {
       try {
         const posts = await RealService.getPosts();
 
-        // Filtrar por reto actual y estado 'completed'
+        // Filter by current challenge and status 'completed'
         const filtered = posts.filter(
           (post) =>
             post.activity_id === parseInt(activityId) &&
@@ -23,7 +23,7 @@ const ParticipationList = ({ activityId }) => {
             const user = await RealService.getUser(post.to_user_id);
             return {
               id: post.id,
-              userName: user?.name?.trim() || 'Anónimo',
+              userName: user?.name?.trim() || 'Anonimous',
               userImage: user?.profile_image || '/placeholder-user.png',
             };
           })
@@ -31,8 +31,7 @@ const ParticipationList = ({ activityId }) => {
 
         setParticipations(results);
       } catch (err) {
-        console.error('Error cargando participaciones:', err);
-        toast.error('No se pudieron cargar las participaciones');
+        toast.error('Participations could not be loaded');
       }
     };
 

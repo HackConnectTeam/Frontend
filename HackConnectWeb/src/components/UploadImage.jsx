@@ -12,7 +12,7 @@ const ImageUploader = ({ onUpload }) => {
       formData.append('image', selected);
       onUpload(formData);
     } else {
-      toast.error('Por favor, selecciona una imagen válida.');
+      toast.error('Please select a valid image file.');
     }
   };
 
@@ -31,7 +31,7 @@ const ImageUploader = ({ onUpload }) => {
       {imagePreview && (
         <img
           src={imagePreview}
-          alt="Vista previa"
+          alt="Preview"
           className="w-40 h-40 object-cover rounded-lg border"
         />
       )}
