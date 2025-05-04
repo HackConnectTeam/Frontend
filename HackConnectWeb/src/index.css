@@ -56,3 +56,18 @@ main::-webkit-scrollbar-thumb {
 main::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* Efecto de "flotación" sutil */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.floating-btn {
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-btn:hover {
+  animation: none;
+  transform: scale(1.05);
+}

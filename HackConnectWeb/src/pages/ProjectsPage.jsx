@@ -42,12 +42,26 @@ const ProjectsPage = () => {
 
             {/* Botón flotante */}
             <button
-            onClick={() => setShowModal(true)}
-            className="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-lg text-3xl flex items-center justify-center hover:bg-primary/90 transition z-40"
-            aria-label="Añadir proyecto"
-            >
-            +
-            </button>
+                    onClick={() => setShowModal(true)}
+                    className="fixed bottom-24 right-6 bg-primary text-white w-14 h-14 rounded-full shadow-xl hover:shadow-2xl transition-all z-30 flex items-center justify-center"
+                    aria-label="Añadir proyecto"
+                    style={{
+                        boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)'
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="w-8 h-8"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                            clipRule="evenodd"
+                        />
+                    </svg>
+                </button>
 
             {showModal && (
             <AddProjectModal
