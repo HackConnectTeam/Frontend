@@ -15,25 +15,24 @@ const ScanPage = () => {
 
   const handleScan = async (userId) => {
     try {
-      await RealService.getUser(userId)
-        .then((exists) => {
-          if (exists) {
-            // If the user exists, navigate to their page
-            handleScanSuccess(userId);
-          } else {
-            // If the user does not exist, create a new user
-            createUser(userId);
-            handleScanSuccess(userId);
-          }
-        });
-      } catch (error) {
+      // Check if the user exists
+      const existenceCheck = await RealService.userExists(userId);
+
+      if (existenceCheck.exists) {
+        // If the user exists, login
+        handleScanSuccess(userId);
+      } else {
+        // If the user does not exist, create a new user
         try {
-          createUser(userId);
+          await RealService.createUser({ id: userId });
           handleScanSuccess(userId);
-        } catch (error) {
-          Toast.error("Error when creating the user. Please, try it again.");
+        } catch (createError) {
+          Toast.error("Error when creating the user. Please, try again.");
         }
       }
+    } catch (error) {
+      Toast.error("Error scanning user. Please, try again.");
+    }
   };
 
   return (

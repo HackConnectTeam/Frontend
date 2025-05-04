@@ -18,6 +18,24 @@ const RealService = {
     }
   },
 
+  userExists: async (userId) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/users/exists/${userId}`, {
+        headers: {
+          accept: 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 422) {
+        console.error('Validation error:', error.response.data.detail);
+      } else {
+        console.error('Error checking if user exists:', error);
+      }
+      throw error;
+    }
+  },
+
   // Obtener un usuario por ID
   getUser: async (id) => {
     try {
