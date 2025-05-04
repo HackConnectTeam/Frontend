@@ -1,7 +1,4 @@
-<<<<<<< Updated upstream
-=======
 import { useEffect, useState } from 'react';
->>>>>>> Stashed changes
 import ChallengeCard from './ChallengeCard';
 import RealService from '../../services/RealService';
 
