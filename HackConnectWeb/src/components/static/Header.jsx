@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import profile from '../../assets/icons/profile.svg';
+import Avatar from '../Avatar';
 
 const Header = ({ userId }) => {
   const navigate = useNavigate();
@@ -14,14 +14,10 @@ const Header = ({ userId }) => {
         {userId && (
           <button
             onClick={() => navigate(`/user/${userId}/edit`)}
-            className="p-2 bg-transparent border-none focus:outline-none z-50"
+            className="p-2 bg-transparent border-none focus:outline-none z-50 flex items-center"
             aria-label="Profile Button"
           >
-            <img
-              src={profile}
-              alt="Profile"
-              className="h-8 w-8 rounded-full border-2 border-white"
-            />
+            <Avatar userId={userId} />
           </button>
         )}
       </header>

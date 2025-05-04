@@ -1,4 +1,5 @@
 import axios from 'axios';
+import defaultAvatar from '../assets/icons/profile.svg';
 
 const API_BASE_URL = 'https://xxx2.lamelas24.com';
 
@@ -236,6 +237,36 @@ const RealService = {
       throw error;
     }
   },
+
+// RealService.js
+getMiiAvatar: async (userId) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/img_retrieval/`,
+      JSON.stringify(userId), // Properly stringify the userId
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }
+    );
+
+    if (response.data?.img) {
+      // Check if the image is already base64 formatted
+      if (response.data.img.startsWith('data:')) {
+        return response.data.img;
+      }
+      return `data:image/png;base64,${response.data.img}`;
+    }
+
+    return defaultAvatar;
+
+  } catch (error) {
+    console.error('Error fetching Mii avatar:', error);
+    return defaultAvatar;
+  }
+},
 
   getCountries: async () => {
     try {
