@@ -1,20 +1,23 @@
-
 import React, { useState, useEffect } from 'react';
 import RealService from '../services/RealService';
 import defaultAvatar from '../assets/icons/profile.svg';
 
 const Avatar = ({ userId, className = '' }) => {
-  const [avatar, setAvatar] = useState(defaultAvatar);
+  // const [avatar, setAvatar] = useState(defaultAvatar);
+  var avatar = defaultAvatar;
 
   useEffect(() => {
     const fetchAvatar = async () => {
       if (userId) {
         try {
-          const avatarImg = await RealService.getMiiAvatar(userId);
-          setAvatar(avatarImg || defaultAvatar);
+          const response = await RealService.getMiiAvatar(userId);
+          // Asegúrate de que response ya incluye el prefijo base64 adecuado
+          // const avatarImg = response?.startsWith('data:image') ? response : `data:image/png;base64,${response}`;
+          console.log(response);
+          avatar = response;
         } catch (error) {
           console.error('Error loading avatar:', error);
-          setAvatar(defaultAvatar);
+          avatar = defaultAvatar;
         }
       }
     };
