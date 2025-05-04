@@ -307,6 +307,22 @@ const RealService = {
     }
   },
 
+  getCompletedActivitiesByUser: async (userId) => {
+    try {
+      const response = await axios.get(
+        `https://xxx2.lamelas24.com/post/completed_activities/${userId}`,
+        {
+          headers: {
+            accept: 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Error obteniendo actividades completadas:', error);
+      throw error;
+    }
+  },
 
 
 };
